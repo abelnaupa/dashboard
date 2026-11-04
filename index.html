@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MILAS Boxing & Movement - Tablero de Métricas RRSS</title>
-    <!-- Tailwind CSS CDN -->
+    <title>MILAS Boxing & Movement - Dashboard de Métricas</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,242 +18,121 @@
                         milasRed: '#EA2B2B',
                         milasRedHover: '#C82323',
                         milasTextMuted: '#9CA3AF'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        heading: ['Montserrat', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <!-- Google Fonts: Montserrat & Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome Icons -->
+    <!-- Font Awesome Icons & Chart.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            background-color: #0E1017;
-            color: #F3F4F6;
-            font-family: 'Inter', sans-serif;
-        }
-        h1, h2, h3, h4, .font-heading {
-            font-family: 'Montserrat', sans-serif;
-        }
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0E1017;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #262A36;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #EA2B2B;
-        }
-    </style>
 </head>
-<body class="min-h-screen bg-milasBg pb-16">
+<body class="bg-[#0E1017] text-gray-100 min-h-screen pb-16 font-sans">
 
-    <!-- Top Navigation Bar -->
-    <header class="bg-milasCard border-b border-milasBorder sticky top-0 z-30 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <!-- Header -->
+    <header class="bg-[#161922] border-b border-[#262A36] sticky top-0 z-30 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-milasRed rounded-lg flex items-center justify-center font-heading font-black text-white text-xl shadow-lg shadow-milasRed/30">
-                    M
-                </div>
+                <div class="w-10 h-10 bg-[#EA2B2B] rounded-lg flex items-center justify-center font-bold text-white text-xl">M</div>
                 <div>
-                    <h1 class="text-lg md:text-xl font-bold tracking-tight text-white uppercase font-heading">MILAS <span class="text-milasRed">BOXING & MOVEMENT</span></h1>
-                    <p class="text-xs text-milasTextMuted hidden sm:block">Tablero de Métricas & Funnel de Ventas Instagram</p>
+                    <h1 class="text-lg font-bold text-white uppercase">MILAS <span class="text-[#EA2B2B]">BOXING & MOVEMENT</span></h1>
+                    <p class="text-xs text-gray-400">Tablero de Métricas e IndexedDB Ilimitado</p>
                 </div>
             </div>
-
-            <div class="flex items-center space-x-3">
-                <button onclick="openModal()" class="bg-milasRed hover:bg-milasRedHover text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 transition-all duration-200 shadow-md shadow-milasRed/20">
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button id="btn-open-modal" class="bg-[#EA2B2B] hover:bg-[#C82323] text-white px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 transition-all shadow-lg shadow-red-900/30">
                     <i class="fa-solid fa-plus"></i>
                     <span>Agregar Contenido</span>
                 </button>
-                <button onclick="exportData()" title="Exportar Copia de Seguridad (JSON)" class="bg-milasBorder/60 hover:bg-milasBorder text-gray-300 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 flex items-center gap-1.5">
+                <button onclick="exportData()" title="Exportar Backup" class="bg-[#262A36] hover:bg-gray-700 text-gray-200 px-3 py-2.5 rounded-xl text-sm transition-all">
                     <i class="fa-solid fa-download"></i>
-                    <span class="hidden md:inline">Exportar</span>
                 </button>
-                <label for="import-file-input" title="Importar Copia de Seguridad (JSON)" class="bg-milasBorder/60 hover:bg-milasBorder text-gray-300 px-3 py-2.5 rounded-xl text-sm transition-all duration-200 cursor-pointer flex items-center gap-1.5">
+                <label title="Importar Backup" class="bg-[#262A36] hover:bg-gray-700 text-gray-200 px-3 py-2.5 rounded-xl text-sm transition-all cursor-pointer">
                     <i class="fa-solid fa-upload"></i>
-                    <span class="hidden md:inline">Importar</span>
+                    <input type="file" accept=".json" onchange="importData(event)" class="hidden">
                 </label>
-                <input type="file" id="import-file-input" accept=".json" onchange="importData(event)" class="hidden">
-                <button onclick="resetData()" title="Restablecer Datos de Ejemplo" class="bg-milasBorder/60 hover:bg-milasBorder text-gray-300 px-3 py-2.5 rounded-xl text-sm transition-all duration-200">
-                    <i class="fa-solid fa-rotate-left"></i>
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
-
-        <!-- KPI Summary Cards Header -->
+    <!-- Main Body -->
+    <main class="max-w-7xl mx-auto px-4 pt-8 space-y-8">
+        <!-- KPIs -->
         <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div class="bg-milasCard border border-milasBorder p-4 rounded-2xl relative overflow-hidden">
-                <div class="text-xs text-milasTextMuted font-medium uppercase tracking-wider">Publicaciones</div>
-                <div id="kpi-total-posts" class="text-2xl font-bold text-white mt-1 font-heading">0</div>
-                <div class="mt-1 text-xs text-emerald-400 flex items-center gap-1">
-                    <i class="fa-brands fa-instagram"></i> Instagram
-                </div>
+            <div class="bg-[#161922] border border-[#262A36] p-4 rounded-2xl">
+                <div class="text-xs text-gray-400 uppercase">Publicaciones</div>
+                <div id="kpi-posts" class="text-2xl font-bold text-white mt-1">0</div>
             </div>
-
-            <div class="bg-milasCard border border-milasBorder p-4 rounded-2xl relative overflow-hidden">
-                <div class="text-xs text-milasTextMuted font-medium uppercase tracking-wider">Visitas Totales</div>
-                <div id="kpi-total-views" class="text-2xl font-bold text-white mt-1 font-heading">0</div>
-                <div class="mt-1 text-xs text-milasTextMuted">Alcance acumulado</div>
+            <div class="bg-[#161922] border border-[#262A36] p-4 rounded-2xl">
+                <div class="text-xs text-gray-400 uppercase">Visitas Totales</div>
+                <div id="kpi-views" class="text-2xl font-bold text-white mt-1">0</div>
             </div>
-
-            <div class="bg-milasCard border border-milasBorder p-4 rounded-2xl relative overflow-hidden">
-                <div class="text-xs text-milasTextMuted font-medium uppercase tracking-wider">Interacciones</div>
-                <div id="kpi-total-engagement" class="text-2xl font-bold text-white mt-1 font-heading">0</div>
-                <div class="mt-1 text-xs text-milasTextMuted">Likes, Com, Guardados</div>
+            <div class="bg-[#161922] border border-[#262A36] p-4 rounded-2xl">
+                <div class="text-xs text-gray-400 uppercase">Interacciones</div>
+                <div id="kpi-interactions" class="text-2xl font-bold text-white mt-1">0</div>
             </div>
-
-            <div class="bg-milasCard border border-milasBorder p-4 rounded-2xl relative overflow-hidden">
-                <div class="text-xs text-milasTextMuted font-medium uppercase tracking-wider">Engagement Prom.</div>
-                <div id="kpi-avg-rate" class="text-2xl font-bold text-white mt-1 font-heading">0%</div>
-                <div class="mt-1 text-xs text-emerald-400 font-medium">Tasa de interacción</div>
+            <div class="bg-[#161922] border border-[#262A36] p-4 rounded-2xl">
+                <div class="text-xs text-gray-400 uppercase">Engagement Prom.</div>
+                <div id="kpi-rate" class="text-2xl font-bold text-emerald-400 mt-1">0%</div>
             </div>
-
-            <div class="bg-milasCard border border-milasRed/40 p-4 rounded-2xl relative overflow-hidden bg-gradient-to-br from-milasCard to-milasRed/10 col-span-2 sm:col-span-1">
-                <div class="text-xs text-milasRed font-semibold uppercase tracking-wider">Clientes Ganados</div>
-                <div id="kpi-total-conversions" class="text-3xl font-extrabold text-white mt-1 font-heading">0</div>
-                <div class="mt-1 text-xs text-gray-300">Atribuidos a RRSS</div>
+            <div class="bg-[#161922] border border-[#EA2B2B]/40 p-4 rounded-2xl bg-gradient-to-br from-[#161922] to-red-950/30">
+                <div class="text-xs text-[#EA2B2B] font-bold uppercase">Clientes Ganados</div>
+                <div id="kpi-clients" class="text-3xl font-black text-white mt-1">0</div>
             </div>
-
-            <div class="bg-milasCard border border-milasBorder p-4 rounded-2xl relative overflow-hidden col-span-2 sm:col-span-1">
-                <div class="text-xs text-milasTextMuted font-medium uppercase tracking-wider">Funnel Top</div>
-                <div id="kpi-top-pillar" class="text-lg font-bold text-milasRed mt-1 font-heading truncate">-</div>
-                <div class="mt-1 text-xs text-milasTextMuted">Etapa con más conversión</div>
+            <div class="bg-[#161922] border border-[#262A36] p-4 rounded-2xl">
+                <div class="text-xs text-gray-400 uppercase">Top Funnel</div>
+                <div id="kpi-top-funnel" class="text-lg font-bold text-[#EA2B2B] mt-1 truncate">-</div>
             </div>
         </section>
 
-        <!-- Analytics Charts -->
+        <!-- Charts -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Conversions by Funnel Objective Stage -->
-            <div class="bg-milasCard border border-milasBorder p-5 rounded-2xl flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h3 class="text-base font-bold text-white font-heading">Clientes Ganados por Etapa del Funnel</h3>
-                        <p class="text-xs text-milasTextMuted">Confianza vs Diferenciación vs Conversión vs Logística</p>
-                    </div>
-                </div>
-                <div class="h-64 relative">
-                    <canvas id="chartConversions"></canvas>
-                </div>
+            <div class="bg-[#161922] border border-[#262A36] p-5 rounded-2xl">
+                <h3 class="text-sm font-bold text-white mb-4">Clientes por Etapa del Funnel</h3>
+                <div class="h-60 relative"><canvas id="chart1"></canvas></div>
             </div>
-
-            <!-- Performance by Content Pillar -->
-            <div class="bg-milasCard border border-milasBorder p-5 rounded-2xl flex flex-col justify-between">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h3 class="text-base font-bold text-white font-heading">Interacciones por Pilar de Contenido</h3>
-                        <p class="text-xs text-milasTextMuted">Rendimiento según Divertido, Educativo e Informativo</p>
-                    </div>
-                </div>
-                <div class="h-64 relative">
-                    <canvas id="chartPillars"></canvas>
-                </div>
+            <div class="bg-[#161922] border border-[#262A36] p-5 rounded-2xl">
+                <h3 class="text-sm font-bold text-white mb-4">Interacciones por Pilar de Contenido</h3>
+                <div class="h-60 relative"><canvas id="chart2"></canvas></div>
             </div>
         </section>
 
-        <!-- Filter & Search Controls -->
-        <section class="bg-milasCard border border-milasBorder p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <span class="text-xs font-semibold text-milasTextMuted uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-solid fa-filter text-milasRed"></i> Filtrar:
-                </span>
-                
-                <!-- Pillar Filter -->
-                <select id="filter-pillar" onchange="renderApp()" class="bg-milasBg border border-milasBorder text-sm rounded-xl px-3 py-2 text-white focus:outline-none focus:border-milasRed flex-1 md:flex-none">
-                    <option value="ALL">Todos los Pilares</option>
-                    <option value="Divertido">Divertido</option>
-                    <option value="Educativo">Educativo</option>
-                    <option value="Informativo">Informativo</option>
-                </select>
+        <!-- Posts Grid Header -->
+        <div class="flex items-center justify-between">
+            <h2 class="text-lg font-bold text-white">Publicaciones Registradas (<span id="count-posts">0</span>)</h2>
+        </div>
 
-                <!-- Objective / Funnel Stage Filter -->
-                <select id="filter-objective" onchange="renderApp()" class="bg-milasBg border border-milasBorder text-sm rounded-xl px-3 py-2 text-white focus:outline-none focus:border-milasRed flex-1 md:flex-none">
-                    <option value="ALL">Todas las Etapas del Funnel</option>
-                    <option value="Confianza">Confianza</option>
-                    <option value="Diferenciación">Diferenciación</option>
-                    <option value="Conversión">Conversión</option>
-                    <option value="Logística">Logística</option>
-                </select>
-
-                <!-- Format Filter -->
-                <select id="filter-format" onchange="renderApp()" class="bg-milasBg border border-milasBorder text-sm rounded-xl px-3 py-2 text-white focus:outline-none focus:border-milasRed flex-1 md:flex-none">
-                    <option value="ALL">Todos los Formatos</option>
-                    <option value="Reel">Reel</option>
-                    <option value="Carrusel">Carrusel</option>
-                    <option value="Estático">Estático</option>
-                    <option value="Historias">Historias</option>
-                </select>
-            </div>
-
-            <!-- Search Bar -->
-            <div class="relative w-full md:w-64">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-milasTextMuted text-sm"></i>
-                <input type="text" id="search-input" onkeyup="renderApp()" placeholder="Buscar por título..." class="w-full bg-milasBg border border-milasBorder text-sm rounded-xl pl-9 pr-3 py-2 text-white focus:outline-none focus:border-milasRed">
-            </div>
-        </section>
-
-        <!-- Posts Grid -->
-        <section>
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold text-white font-heading flex items-center gap-2">
-                    <i class="fa-solid fa-photo-film text-milasRed"></i> Publicaciones Registradas
-                </h2>
-                <span class="text-xs text-milasTextMuted">
-                    Mostrando <strong id="visible-count" class="text-white">0</strong> publicaciones
-                </span>
-            </div>
-
-            <div id="posts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Dynamic Post Cards Rendered Here -->
-            </div>
-        </section>
+        <div id="posts-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Cards Rendered Here -->
+        </div>
     </main>
 
-    <!-- Modal Form for Adding/Editing Posts -->
-    <div id="post-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-milasCard border border-milasBorder rounded-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl space-y-6">
-            <div class="flex items-center justify-between border-b border-milasBorder pb-4">
-                <h3 id="modal-title" class="text-lg font-bold text-white font-heading">Agregar Nuevo Contenido</h3>
-                <button onclick="closeModal()" class="text-milasTextMuted hover:text-white text-xl">
+    <!-- Modal Form -->
+    <div id="modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#161922] border border-[#262A36] rounded-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-[#262A36] pb-3">
+                <h3 id="modal-title" class="text-base font-bold text-white">Agregar Nuevo Contenido</h3>
+                <button type="button" id="btn-close-modal" class="text-gray-400 hover:text-white text-xl">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="post-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <input type="hidden" id="form-id">
+            <form id="content-form" class="space-y-4">
+                <input type="hidden" id="post-id">
 
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-milasTextMuted mb-1">Título / Concepto del Reel *</label>
-                    <input type="text" id="form-title" required placeholder="Ej: Conexión Padre e Hijo" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-milasRed">
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Título / Concepto *</label>
+                    <input type="text" id="post-title" required class="w-full bg-[#0E1017] border border-[#262A36] rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-[#EA2B2B]">
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-milasTextMuted mb-1">Fecha de Publicación *</label>
-                        <input type="date" id="form-date" required class="w-full bg-milasBg border border-milasBorder rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-milasRed">
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Fecha *</label>
+                        <input type="date" id="post-date" required class="w-full bg-[#0E1017] border border-[#262A36] rounded-xl p-2.5 text-sm text-white focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-milasTextMuted mb-1">Formato *</label>
-                        <select id="form-format" required class="w-full bg-milasBg border border-milasBorder rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-milasRed">
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Formato *</label>
+                        <select id="post-format" class="w-full bg-[#0E1017] border border-[#262A36] rounded-xl p-2.5 text-sm text-white">
                             <option value="Reel">Reel</option>
                             <option value="Carrusel">Carrusel</option>
                             <option value="Estático">Estático</option>
@@ -262,18 +141,18 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-milasTextMuted mb-1">Pilar de Contenido *</label>
-                        <select id="form-pillar" required class="w-full bg-milasBg border border-milasBorder rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-milasRed">
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Pilar *</label>
+                        <select id="post-pillar" class="w-full bg-[#0E1017] border border-[#262A36] rounded-xl p-2.5 text-sm text-white">
                             <option value="Divertido">Divertido</option>
                             <option value="Educativo">Educativo</option>
                             <option value="Informativo">Informativo</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-milasTextMuted mb-1">Objetivo del Funnel *</label>
-                        <select id="form-objective" required class="w-full bg-milasBg border border-milasBorder rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-milasRed">
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Objetivo Funnel *</label>
+                        <select id="post-objective" class="w-full bg-[#0E1017] border border-[#262A36] rounded-xl p-2.5 text-sm text-white">
                             <option value="Confianza">Confianza</option>
                             <option value="Diferenciación">Diferenciación</option>
                             <option value="Conversión">Conversión</option>
@@ -283,707 +162,357 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-milasTextMuted mb-1">Enlace de la Publicación (Opcional)</label>
-                    <input type="url" id="form-url" placeholder="https://www.instagram.com/reel/..." class="w-full bg-milasBg border border-milasBorder rounded-xl p-2.5 text-sm text-white focus:outline-none focus:border-milasRed">
-                </div>
-
-                <!-- Image Upload / URL Input -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-semibold uppercase text-milasTextMuted">Imagen o Portada del Post</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <span class="text-xs text-gray-400 block mb-1">Opción A: Subir Archivo</span>
-                            <input type="file" id="form-file" accept="image/*" onchange="handleFileSelect(event)" class="w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-milasBorder file:text-white hover:file:bg-milasRed">
-                        </div>
-                        <div>
-                            <span class="text-xs text-gray-400 block mb-1">Opción B: URL de Imagen</span>
-                            <input type="text" id="form-image-url" oninput="handleImageUrlInput(this.value)" placeholder="https://..." class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-xs text-white focus:outline-none focus:border-milasRed">
-                        </div>
-                    </div>
-                    <div id="image-preview-container" class="mt-2 h-32 w-full rounded-xl bg-milasBg border border-milasBorder flex items-center justify-center overflow-hidden">
-                        <span class="text-xs text-milasTextMuted">Sin vista previa</span>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Subir Imagen / Portada</label>
+                    <input type="file" id="post-file" accept="image/*" class="w-full text-xs text-gray-400 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:bg-[#262A36] file:text-white">
+                    <div id="preview-box" class="mt-2 h-28 w-full rounded-xl bg-[#0E1017] border border-[#262A36] flex items-center justify-center overflow-hidden">
+                        <span class="text-xs text-gray-500">Sin imagen seleccionada</span>
                     </div>
                 </div>
 
-                <!-- Metrics Fields -->
-                <div class="border-t border-milasBorder pt-3">
-                    <label class="block text-xs font-semibold uppercase text-milasRed mb-2">Métricas Iniciales (5 Acciones IG)</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <!-- 5 Metrics -->
+                <div class="border-t border-[#262A36] pt-3">
+                    <label class="block text-xs font-bold text-[#EA2B2B] uppercase mb-2">Métricas de Instagram</label>
+                    <div class="grid grid-cols-3 gap-2 text-xs">
                         <div>
-                            <label class="block text-[10px] text-milasTextMuted uppercase">Visitas / Alcance</label>
-                            <input type="number" id="form-views" min="0" value="0" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed">
+                            <span class="text-[10px] text-gray-400 block">Visitas</span>
+                            <input type="number" id="post-views" value="0" min="0" class="w-full bg-[#0E1017] border border-[#262A36] rounded-lg p-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-milasTextMuted uppercase">Likes</label>
-                            <input type="number" id="form-likes" min="0" value="0" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed">
+                            <span class="text-[10px] text-gray-400 block">Likes</span>
+                            <input type="number" id="post-likes" value="0" min="0" class="w-full bg-[#0E1017] border border-[#262A36] rounded-lg p-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-milasTextMuted uppercase">Comentarios</label>
-                            <input type="number" id="form-comments" min="0" value="0" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed">
+                            <span class="text-[10px] text-gray-400 block">Comentarios</span>
+                            <input type="number" id="post-comments" value="0" min="0" class="w-full bg-[#0E1017] border border-[#262A36] rounded-lg p-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-milasTextMuted uppercase">Guardados</label>
-                            <input type="number" id="form-saves" min="0" value="0" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed">
+                            <span class="text-[10px] text-gray-400 block">Guardados</span>
+                            <input type="number" id="post-saves" value="0" min="0" class="w-full bg-[#0E1017] border border-[#262A36] rounded-lg p-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-milasTextMuted uppercase">Compartidos</label>
-                            <input type="number" id="form-shares" min="0" value="0" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed">
+                            <span class="text-[10px] text-gray-400 block">Compartidos</span>
+                            <input type="number" id="post-shares" value="0" min="0" class="w-full bg-[#0E1017] border border-[#262A36] rounded-lg p-2 text-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] text-milasTextMuted uppercase font-bold text-amber-400">Reposts / Re-postear</label>
-                            <input type="number" id="form-reposts" min="0" value="0" class="w-full bg-milasBg border border-milasBorder rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="block text-[10px] text-milasRed uppercase font-bold">Clientes (+1)</label>
-                            <input type="number" id="form-conversions" min="0" value="0" class="w-full bg-milasBg border border-milasRed/60 rounded-xl p-2 text-sm text-white focus:outline-none focus:border-milasRed font-bold">
+                            <span class="text-[10px] text-amber-400 font-bold block">Reposts</span>
+                            <input type="number" id="post-reposts" value="0" min="0" class="w-full bg-[#0E1017] border border-[#262A36] rounded-lg p-2 text-white font-bold">
                         </div>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-end space-x-3 border-t border-milasBorder pt-4">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-milasTextMuted hover:text-white transition-colors">Cancelar</button>
-                    <button type="submit" class="bg-milasRed hover:bg-milasRedHover text-white px-5 py-2 rounded-xl text-sm font-bold transition-all shadow-lg shadow-milasRed/20">Guardar Publicación</button>
+                <div class="flex justify-end gap-3 pt-3 border-t border-[#262A36]">
+                    <button type="button" id="btn-cancel" class="px-4 py-2 text-xs text-gray-400 hover:text-white">Cancelar</button>
+                    <button type="submit" class="bg-[#EA2B2B] hover:bg-[#C82323] text-white px-5 py-2 rounded-xl text-xs font-bold shadow-lg">Guardar Publicación</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-milasCard border border-milasRed text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 transition-all duration-300 translate-y-20 opacity-0 z-50">
-        <i class="fa-solid fa-circle-check text-milasRed text-lg"></i>
-        <span id="toast-message" class="text-sm font-medium">Operación realizada</span>
-    </div>
-
-    <!-- JS Logic with IndexedDB & Canvas Compression -->
+    <!-- JavaScript Logic -->
     <script>
-        // Default Sample Posts for MILAS Boxing & Movement
-        const SAMPLE_POSTS = [
-            {
-                id: 'sample-1',
-                title: 'Conexión Padre e Hijo 🥊',
-                date: '2026-10-10',
-                format: 'Reel',
-                pillar: 'Educativo',
-                objective: 'Confianza',
-                url: 'https://instagram.com',
-                image: 'https://placehold.co/600x800/161922/EA2B2B?text=Padre+e+Hijo+Boxeo',
-                views: 4850,
-                likes: 380,
-                comments: 42,
-                saves: 85,
-                shares: 31,
-                reposts: 19,
-                conversions: 4
-            },
-            {
-                id: 'sample-2',
-                title: 'Coaches y Técnica Guiada 🏆',
-                date: '2026-10-14',
-                format: 'Reel',
-                pillar: 'Informativo',
-                objective: 'Diferenciación',
-                url: 'https://instagram.com',
-                image: 'https://placehold.co/600x800/161922/FFFFFF?text=Coaches+MILAS',
-                views: 3200,
-                likes: 210,
-                comments: 18,
-                saves: 45,
-                shares: 12,
-                reposts: 8,
-                conversions: 2
-            },
-            {
-                id: 'sample-3',
-                title: 'Plan Full Acceso Box + Gym 🔥',
-                date: '2026-10-18',
-                format: 'Reel',
-                pillar: 'Informativo',
-                objective: 'Conversión',
-                url: 'https://instagram.com',
-                image: 'https://placehold.co/600x800/EA2B2B/FFFFFF?text=Plan+Full+Acceso',
-                views: 6100,
-                likes: 520,
-                comments: 89,
-                saves: 140,
-                shares: 65,
-                reposts: 34,
-                conversions: 9
-            },
-            {
-                id: 'sample-4',
-                title: 'Horarios Nocturnos 20:00 - 21:00 🌙',
-                date: '2026-10-21',
-                format: 'Reel',
-                pillar: 'Informativo',
-                objective: 'Logística',
-                url: 'https://instagram.com',
-                image: 'https://placehold.co/600x800/161922/EA2B2B?text=Clases+20:00+hrs',
-                views: 2900,
-                likes: 195,
-                comments: 24,
-                saves: 38,
-                shares: 15,
-                reposts: 11,
-                conversions: 3
+        let db;
+        let currentImageBase64 = '';
+        let chart1Instance = null;
+        let chart2Instance = null;
+
+        // Init IndexedDB Storage Engine
+        const request = indexedDB.open("MILAS_DB", 1);
+        request.onupgradeneeded = function(e) {
+            db = e.target.result;
+            if (!db.objectStoreNames.contains("posts")) {
+                db.createObjectStore("posts", { keyPath: "id" });
             }
-        ];
-
-        // IndexedDB Initialization
-        const DB_NAME = 'MilasSocialDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'posts';
-        let db = null;
-        let posts = [];
-        let currentImageData = '';
-        let chartConversionsInstance = null;
-        let chartPillarsInstance = null;
-
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                request.onupgradeneeded = (e) => {
-                    const db = e.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                    }
-                };
-                request.onsuccess = (e) => {
-                    db = e.target.result;
-                    resolve(db);
-                };
-                request.onerror = (e) => {
-                    console.error('IndexedDB Error:', e);
-                    reject(e);
-                };
-            });
-        }
-
-        async function getAllPostsFromDB() {
-            return new Promise((resolve) => {
-                if (!db) return resolve([]);
-                const tx = db.transaction(STORE_NAME, 'readonly');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.getAll();
-                req.onsuccess = () => resolve(req.result || []);
-                req.onerror = () => resolve([]);
-            });
-        }
-
-        async function savePostToDB(post) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(STORE_NAME, 'readwrite');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.put(post);
-                req.onsuccess = () => resolve();
-                req.onerror = (e) => reject(e);
-            });
-        }
-
-        async function deletePostFromDB(id) {
-            return new Promise((resolve, reject) => {
-                const tx = db.transaction(STORE_NAME, 'readwrite');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.delete(id);
-                req.onsuccess = () => resolve();
-                req.onerror = (e) => reject(e);
-            });
-        }
-
-        async function clearDBStore() {
-            return new Promise((resolve) => {
-                const tx = db.transaction(STORE_NAME, 'readwrite');
-                const store = tx.objectStore(STORE_NAME);
-                const req = store.clear();
-                req.onsuccess = () => resolve();
-            });
-        }
-
-        // Init App
-        window.onload = async function() {
-            try {
-                await initDB();
-                posts = await getAllPostsFromDB();
-                if (posts.length === 0) {
-                    for (const sample of SAMPLE_POSTS) {
-                        await savePostToDB(sample);
-                    }
-                    posts = await getAllPostsFromDB();
-                }
-            } catch (err) {
-                console.warn('IndexedDB unavailable, falling back to array in memory', err);
-                posts = [...SAMPLE_POSTS];
-            }
-            renderApp();
+        };
+        request.onsuccess = function(e) {
+            db = e.target.result;
+            loadPostsFromDB();
         };
 
-        async function resetData() {
-            if (confirm('¿Deseas restablecer las publicaciones de ejemplo predeterminadas?')) {
-                await clearDBStore();
-                for (const sample of SAMPLE_POSTS) {
-                    await savePostToDB(sample);
+        // Modal triggers
+        document.getElementById('btn-open-modal').onclick = () => openModal();
+        document.getElementById('btn-close-modal').onclick = () => closeModal();
+        document.getElementById('btn-cancel').onclick = () => closeModal();
+
+        function openModal(post = null) {
+            document.getElementById('content-form').reset();
+            currentImageBase64 = '';
+            document.getElementById('preview-box').innerHTML = '<span class="text-xs text-gray-500">Sin imagen seleccionada</span>';
+            
+            if (post) {
+                document.getElementById('modal-title').innerText = 'Editar Publicación';
+                document.getElementById('post-id').value = post.id;
+                document.getElementById('post-title').value = post.title;
+                document.getElementById('post-date').value = post.date;
+                document.getElementById('post-format').value = post.format;
+                document.getElementById('post-pillar').value = post.pillar;
+                document.getElementById('post-objective').value = post.objective;
+                document.getElementById('post-views').value = post.views;
+                document.getElementById('post-likes').value = post.likes;
+                document.getElementById('post-comments').value = post.comments;
+                document.getElementById('post-saves').value = post.saves;
+                document.getElementById('post-shares').value = post.shares;
+                document.getElementById('post-reposts').value = post.reposts;
+                if (post.image) {
+                    currentImageBase64 = post.image;
+                    document.getElementById('preview-box').innerHTML = `<img src="${post.image}" class="h-full w-full object-cover">`;
                 }
-                posts = await getAllPostsFromDB();
-                renderApp();
-                showToast('Datos restablecidos correctamente');
+            } else {
+                document.getElementById('modal-title').innerText = 'Agregar Nuevo Contenido';
+                document.getElementById('post-id').value = '';
+                document.getElementById('post-date').value = new Date().toISOString().split('T')[0];
             }
+            document.getElementById('modal').classList.remove('hidden');
         }
 
-        // Client-Side Canvas Image Compression (Max 600px width/height, quality 0.65)
-        function compressImage(file, maxWidth = 600, maxHeight = 600, quality = 0.65) {
-            return new Promise((resolve) => {
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        // Automatic Image Compression Canvas
+        document.getElementById('post-file').onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
                 const reader = new FileReader();
-                reader.readAsDataURL(file);
                 reader.onload = function(event) {
                     const img = new Image();
-                    img.src = event.target.result;
                     img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 500;
                         let width = img.width;
                         let height = img.height;
 
                         if (width > height) {
-                            if (width > maxWidth) {
-                                height = Math.round((height * maxWidth) / width);
-                                width = maxWidth;
-                            }
+                            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
                         } else {
-                            if (height > maxHeight) {
-                                width = Math.round((width * maxHeight) / height);
-                                height = maxHeight;
-                            }
+                            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
                         }
-
-                        const canvas = document.createElement('canvas');
                         canvas.width = width;
                         canvas.height = height;
-                        const ctx = canvas.getContext('2d');
+                        const ctx = canvas.getContext('canvas');
                         ctx.drawImage(img, 0, 0, width, height);
-
-                        // Compress to JPEG format with reduced quality
-                        const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-                        resolve(compressedDataUrl);
+                        currentImageBase64 = canvas.toDataURL('image/jpeg', 0.65);
+                        document.getElementById('preview-box').innerHTML = `<img src="${currentImageBase64}" class="h-full w-full object-cover">`;
                     };
+                    img.src = event.target.result;
                 };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // Save / Submit
+        document.getElementById('content-form').onsubmit = function(e) {
+            e.preventDefault();
+            const id = document.getElementById('post-id').value || 'post-' + Date.now();
+            
+            const newPost = {
+                id: id,
+                title: document.getElementById('post-title').value,
+                date: document.getElementById('post-date').value,
+                format: document.getElementById('post-format').value,
+                pillar: document.getElementById('post-pillar').value,
+                objective: document.getElementById('post-objective').value,
+                views: parseInt(document.getElementById('post-views').value) || 0,
+                likes: parseInt(document.getElementById('post-likes').value) || 0,
+                comments: parseInt(document.getElementById('post-comments').value) || 0,
+                saves: parseInt(document.getElementById('post-saves').value) || 0,
+                shares: parseInt(document.getElementById('post-shares').value) || 0,
+                reposts: parseInt(document.getElementById('post-reposts').value) || 0,
+                conversions: 0,
+                image: currentImageBase64
+            };
+
+            const tx = db.transaction("posts", "readwrite");
+            tx.objectStore("posts").put(newPost);
+            tx.oncomplete = function() {
+                closeModal();
+                loadPostsFromDB();
+            };
+        };
+
+        // Incremental Conversion (+1 Cliente)
+        function addClient(id) {
+            const tx = db.transaction("posts", "readwrite");
+            const store = tx.objectStore("posts");
+            const getReq = store.get(id);
+            getReq.onsuccess = function() {
+                const post = getReq.result;
+                if (post) {
+                    post.conversions = (post.conversions || 0) + 1;
+                    store.put(post);
+                    tx.oncomplete = () => loadPostsFromDB();
+                }
+            };
+        }
+
+        function deletePost(id) {
+            if (confirm('¿Deseas eliminar esta publicación?')) {
+                const tx = db.transaction("posts", "readwrite");
+                tx.objectStore("posts").delete(id);
+                tx.oncomplete = () => loadPostsFromDB();
+            }
+        }
+
+        // Load & Render
+        function loadPostsFromDB() {
+            const tx = db.transaction("posts", "readonly");
+            const store = tx.objectStore("posts");
+            const getAll = store.getAll();
+            getAll.onsuccess = function() {
+                const posts = getAll.result || [];
+                renderUI(posts);
+            };
+        }
+
+        function renderUI(posts) {
+            document.getElementById('count-posts').innerText = posts.length;
+            document.getElementById('kpi-posts').innerText = posts.length;
+
+            let totalViews = 0, totalInteractions = 0, totalClients = 0;
+            const funnelObj = { Confianza:0, Diferenciación:0, Conversión:0, Logística:0 };
+            const pillarObj = { Divertido:0, Educativo:0, Informativo:0 };
+
+            posts.forEach(p => {
+                totalViews += (p.views || 0);
+                const inter = (p.likes||0) + (p.comments||0) + (p.saves||0) + (p.shares||0) + (p.reposts||0);
+                totalInteractions += inter;
+                totalClients += (p.conversions || 0);
+                
+                if (funnelObj[p.objective] !== undefined) funnelObj[p.objective] += (p.conversions || 0);
+                if (pillarObj[p.pillar] !== undefined) pillarObj[p.pillar] += inter;
+            });
+
+            document.getElementById('kpi-views').innerText = totalViews.toLocaleString();
+            document.getElementById('kpi-interactions').innerText = totalInteractions.toLocaleString();
+            document.getElementById('kpi-clients').innerText = totalClients;
+            
+            const rate = totalViews > 0 ? ((totalInteractions / totalViews) * 100).toFixed(1) : '0.0';
+            document.getElementById('kpi-rate').innerText = rate + '%';
+
+            let topF = '-'; let maxC = -1;
+            Object.keys(funnelObj).forEach(k => { if(funnelObj[k] > maxC) { maxC = funnelObj[k]; topF = k; } });
+            document.getElementById('kpi-top-funnel').innerText = topF;
+
+            // Render Cards
+            const container = document.getElementById('posts-container');
+            if (posts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-[#161922] border border-[#262A36] p-8 rounded-2xl text-center text-gray-400">
+                        <i class="fa-solid fa-folder-open text-3xl mb-2 text-[#EA2B2B]"></i>
+                        <p>Aún no hay publicaciones guardadas. Haz clic en "Agregar Contenido" para comenzar.</p>
+                    </div>`;
+            } else {
+                container.innerHTML = posts.map(p => {
+                    const inter = (p.likes||0) + (p.comments||0) + (p.saves||0) + (p.shares||0) + (p.reposts||0);
+                    const postRate = p.views > 0 ? ((inter / p.views) * 100).toFixed(1) : '0.0';
+                    const fallbackImg = `https://placehold.co/400x500/161922/EA2B2B?text=${encodeURIComponent(p.title)}`;
+
+                    return `
+                        <div class="bg-[#161922] border border-[#262A36] rounded-2xl overflow-hidden flex flex-col justify-between">
+                            <div>
+                                <div class="relative h-44 bg-black overflow-hidden">
+                                    <img src="${p.image || fallbackImg}" class="w-full h-full object-cover">
+                                    <div class="absolute top-2 left-2 bg-[#EA2B2B] text-white text-[10px] font-bold px-2 py-0.5 rounded">${p.objective}</div>
+                                    <div class="absolute top-2 right-2 flex gap-1">
+                                        <button onclick='editPost(${JSON.stringify(p)})' class="w-7 h-7 bg-black/60 text-white rounded-lg flex items-center justify-center text-xs"><i class="fa-solid fa-pen"></i></button>
+                                        <button onclick="deletePost('${p.id}')" class="w-7 h-7 bg-black/60 hover:bg-[#EA2B2B] text-white rounded-lg flex items-center justify-center text-xs"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                                </div>
+                                <div class="p-4 space-y-3">
+                                    <h3 class="font-bold text-white text-sm line-clamp-2">${p.title}</h3>
+                                    <div class="grid grid-cols-3 gap-1 bg-[#0E1017] p-2 rounded-xl text-center text-[10px]">
+                                        <div><span class="text-gray-400 block">Likes</span><strong>${p.likes||0}</strong></div>
+                                        <div><span class="text-gray-400 block">Com.</span><strong>${p.comments||0}</strong></div>
+                                        <div><span class="text-gray-400 block">Guard.</span><strong>${p.saves||0}</strong></div>
+                                        <div><span class="text-gray-400 block">Comp.</span><strong>${p.shares||0}</strong></div>
+                                        <div><span class="text-amber-400 block font-bold">Repost</span><strong class="text-amber-400">${p.reposts||0}</strong></div>
+                                        <div><span class="text-gray-400 block">Visitas</span><strong>${p.views||0}</strong></div>
+                                    </div>
+                                    <div class="text-xs text-gray-400 flex justify-between">
+                                        <span>Engagement: <strong class="text-emerald-400">${postRate}%</strong></span>
+                                        <span>${p.format}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 pt-0">
+                                <div class="bg-[#EA2B2B]/10 border border-[#EA2B2B]/30 rounded-xl p-2.5 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-[9px] uppercase font-bold text-[#EA2B2B]">Clientes</div>
+                                        <div class="text-lg font-bold text-white">${p.conversions||0}</div>
+                                    </div>
+                                    <button onclick="addClient('${p.id}')" class="bg-[#EA2B2B] hover:bg-[#C82323] text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1 shadow">
+                                        <i class="fa-solid fa-user-plus"></i> +1 Cliente
+                                    </button>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('');
+            }
+
+            renderCharts(funnelObj, pillarObj);
+        }
+
+        function editPost(post) { openModal(post); }
+
+        // Render Charts
+        function renderCharts(funnelData, pillarData) {
+            const ctx1 = document.getElementById('chart1').getContext('2d');
+            if (chart1Instance) chart1Instance.destroy();
+            chart1Instance = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(funnelData),
+                    datasets: [{ label: 'Clientes', data: Object.values(funnelData), backgroundColor: ['#3B82F6','#10B981','#EA2B2B','#F59E0B'], borderRadius: 6 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { ticks: { precision: 0 } } } }
+            });
+
+            const ctx2 = document.getElementById('chart2').getContext('2d');
+            if (chart2Instance) chart2Instance.destroy();
+            chart2Instance = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(pillarData),
+                    datasets: [{ data: Object.values(pillarData), backgroundColor: ['#EC4899','#8B5CF6','#EA2B2B'], borderWidth: 2, borderColor: '#161922' }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
             });
         }
 
-        async function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                showToast('Comprimiendo imagen...');
-                currentImageData = await compressImage(file);
-                updatePreview(currentImageData);
-                showToast('Imagen comprimida con éxito');
-            }
-        }
-
-        function handleImageUrlInput(url) {
-            if (url) {
-                currentImageData = url;
-                updatePreview(url);
-            }
-        }
-
-        function updatePreview(src) {
-            const container = document.getElementById('image-preview-container');
-            if (src) {
-                container.innerHTML = `<img src="${src}" class="h-full w-full object-cover" onerror="this.src='https://placehold.co/600x800/161922/EA2B2B?text=Error+Imagen'">`;
-            } else {
-                container.innerHTML = `<span class="text-xs text-milasTextMuted">Sin vista previa</span>`;
-            }
-        }
-
-        // Export/Import JSON Functions
+        // Export / Import Data
         function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(posts, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `milas_metrics_backup_${new Date().toISOString().split('T')[0]}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-            showToast('Copia de seguridad exportada');
+            const tx = db.transaction("posts", "readonly");
+            tx.objectStore("posts").getAll().onsuccess = function(e) {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(e.target.result));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                downloadAnchor.setAttribute("download", `milas_backup_${new Date().toISOString().split('T')[0]}.json`);
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                downloadAnchor.remove();
+            };
         }
 
         function importData(event) {
             const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    const importedPosts = JSON.parse(e.target.result);
-                    if (Array.isArray(importedPosts)) {
-                        await clearDBStore();
-                        for (const p of importedPosts) {
-                            await savePostToDB(p);
-                        }
-                        posts = await getAllPostsFromDB();
-                        renderApp();
-                        showToast(`${importedPosts.length} publicaciones importadas exitosamente`);
-                    } else {
-                        alert('El archivo JSON no tiene un formato válido.');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedPosts = JSON.parse(e.target.result);
+                        const tx = db.transaction("posts", "readwrite");
+                        const store = tx.objectStore("posts");
+                        importedPosts.forEach(p => store.put(p));
+                        tx.oncomplete = function() {
+                            alert('¡Datos importados con éxito!');
+                            loadPostsFromDB();
+                        };
+                    } catch (err) {
+                        alert('El archivo no tiene un formato válido JSON.');
                     }
-                } catch (err) {
-                    alert('Error al leer el archivo JSON.');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // Incremental Conversion
-        async function addConversion(id, event) {
-            event.stopPropagation();
-            const post = posts.find(p => p.id === id);
-            if (post) {
-                post.conversions = (parseInt(post.conversions) || 0) + 1;
-                await savePostToDB(post);
-                posts = await getAllPostsFromDB();
-                renderApp();
-                showToast(`+1 Cliente asignado a "${post.title}"`);
+                };
+                reader.readAsText(file);
             }
         }
-
-        // Engagement Formula: ((Likes + Comments + Saves + Shares + Reposts) / Views) * 100
-        function calculateEngagementRate(post) {
-            const views = parseInt(post.views) || 0;
-            if (views === 0) return 0;
-            const totalInteractions = (parseInt(post.likes) || 0) + 
-                                     (parseInt(post.comments) || 0) + 
-                                     (parseInt(post.saves) || 0) + 
-                                     (parseInt(post.shares) || 0) +
-                                     (parseInt(post.reposts) || 0);
-            return ((totalInteractions / views) * 100).toFixed(1);
-        }
-
-        // Modal Controls
-        function openModal(editId = null) {
-            const modal = document.getElementById('post-modal');
-            const form = document.getElementById('post-form');
-            form.reset();
-            currentImageData = '';
-            updatePreview('');
-
-            if (editId) {
-                const post = posts.find(p => p.id === editId);
-                if (post) {
-                    document.getElementById('modal-title').innerText = 'Editar Contenido';
-                    document.getElementById('form-id').value = post.id;
-                    document.getElementById('form-title').value = post.title;
-                    document.getElementById('form-date').value = post.date;
-                    document.getElementById('form-format').value = post.format;
-                    document.getElementById('form-pillar').value = post.pillar;
-                    document.getElementById('form-objective').value = post.objective;
-                    document.getElementById('form-url').value = post.url || '';
-                    document.getElementById('form-views').value = post.views || 0;
-                    document.getElementById('form-likes').value = post.likes || 0;
-                    document.getElementById('form-comments').value = post.comments || 0;
-                    document.getElementById('form-saves').value = post.saves || 0;
-                    document.getElementById('form-shares').value = post.shares || 0;
-                    document.getElementById('form-reposts').value = post.reposts || 0;
-                    document.getElementById('form-conversions').value = post.conversions || 0;
-                    
-                    if (post.image) {
-                        currentImageData = post.image;
-                        if (post.image.startsWith('http')) {
-                            document.getElementById('form-image-url').value = post.image;
-                        }
-                        updatePreview(post.image);
-                    }
-                }
-            } else {
-                document.getElementById('modal-title').innerText = 'Agregar Nuevo Contenido';
-                document.getElementById('form-id').value = '';
-                document.getElementById('form-date').value = new Date().toISOString().split('T')[0];
-            }
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('post-modal').classList.add('hidden');
-        }
-
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-
-            const id = document.getElementById('form-id').value || ('post-' + Date.now());
-            const title = document.getElementById('form-title').value;
-            const date = document.getElementById('form-date').value;
-            const format = document.getElementById('form-format').value;
-            const pillar = document.getElementById('form-pillar').value;
-            const objective = document.getElementById('form-objective').value;
-            const url = document.getElementById('form-url').value;
-            const views = parseInt(document.getElementById('form-views').value) || 0;
-            const likes = parseInt(document.getElementById('form-likes').value) || 0;
-            const comments = parseInt(document.getElementById('form-comments').value) || 0;
-            const saves = parseInt(document.getElementById('form-saves').value) || 0;
-            const shares = parseInt(document.getElementById('form-shares').value) || 0;
-            const reposts = parseInt(document.getElementById('form-reposts').value) || 0;
-            const conversions = parseInt(document.getElementById('form-conversions').value) || 0;
-
-            const defaultImg = `https://placehold.co/600x800/161922/EA2B2B?text=${encodeURIComponent(title)}`;
-            const image = currentImageData || defaultImg;
-
-            const postObj = { id, title, date, format, pillar, objective, url, image, views, likes, comments, saves, shares, reposts, conversions };
-            
-            await savePostToDB(postObj);
-            posts = await getAllPostsFromDB();
-            
-            showToast('Publicación guardada exitosamente');
-            renderApp();
-            closeModal();
-        }
-
-        async function deletePost(id, event) {
-            event.stopPropagation();
-            if (confirm('¿Eliminar esta publicación?')) {
-                await deletePostFromDB(id);
-                posts = await getAllPostsFromDB();
-                renderApp();
-                showToast('Publicación eliminada');
-            }
-        }
-
-        // Render Cards, KPIs and Charts
-        function renderApp() {
-            const pillarFilter = document.getElementById('filter-pillar').value;
-            const objectiveFilter = document.getElementById('filter-objective').value;
-            const formatFilter = document.getElementById('filter-format').value;
-            const search = document.getElementById('search-input').value.toLowerCase();
-
-            // Filter logic
-            const filteredPosts = posts.filter(post => {
-                const matchPillar = pillarFilter === 'ALL' || post.pillar === pillarFilter;
-                const matchObjective = objectiveFilter === 'ALL' || post.objective === objectiveFilter;
-                const matchFormat = formatFilter === 'ALL' || post.format === formatFilter;
-                const matchSearch = post.title.toLowerCase().includes(search);
-                return matchPillar && matchObjective && matchFormat && matchSearch;
-            });
-
-            document.getElementById('visible-count').innerText = filteredPosts.length;
-
-            // Render Cards
-            const grid = document.getElementById('posts-grid');
-            if (filteredPosts.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full bg-milasCard border border-milasBorder p-8 rounded-2xl text-center text-milasTextMuted">
-                        <i class="fa-solid fa-folder-open text-3xl mb-2 text-milasRed"></i>
-                        <p>No se encontraron publicaciones con los filtros seleccionados.</p>
-                    </div>
-                `;
-            } else {
-                grid.innerHTML = filteredPosts.map(post => {
-                    const rate = calculateEngagementRate(post);
-                    const defaultImg = `https://placehold.co/600x800/161922/EA2B2B?text=${encodeURIComponent(post.title)}`;
-                    
-                    return `
-                        <div class="bg-milasCard border border-milasBorder hover:border-milasRed/60 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 flex flex-col justify-between group">
-                            <div>
-                                <!-- Image Thumbnail Header -->
-                                <div class="relative h-48 bg-milasBg overflow-hidden">
-                                    <img src="${post.image || defaultImg}" onerror="this.src='${defaultImg}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-milasCard via-transparent to-transparent"></div>
-                                    
-                                    <!-- Badges -->
-                                    <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                                        <span class="bg-black/70 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md border border-white/10 uppercase">
-                                            ${post.format}
-                                        </span>
-                                        <span class="bg-milasRed text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-md">
-                                            ${post.objective}
-                                        </span>
-                                    </div>
-
-                                    <div class="absolute top-3 right-3 flex gap-1">
-                                        <button onclick="openModal('${post.id}')" title="Editar" class="w-7 h-7 bg-black/60 hover:bg-black text-white rounded-lg flex items-center justify-center text-xs backdrop-blur-md">
-                                            <i class="fa-solid fa-pen"></i>
-                                        </button>
-                                        <button onclick="deletePost('${post.id}', event)" title="Eliminar" class="w-7 h-7 bg-black/60 hover:bg-milasRed text-white rounded-lg flex items-center justify-center text-xs backdrop-blur-md">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="absolute bottom-2 left-3 right-3 flex items-center justify-between text-xs text-gray-300">
-                                        <span><i class="fa-regular fa-calendar"></i> ${post.date}</span>
-                                        <span class="bg-milasBorder/80 px-2 py-0.5 rounded text-[10px] text-white font-medium">${post.pillar}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Card Body -->
-                                <div class="p-4 space-y-3">
-                                    <div class="flex items-start justify-between gap-2">
-                                        <h3 class="font-bold text-white text-base leading-snug line-clamp-2">${post.title}</h3>
-                                        ${post.url ? `<a href="${post.url}" target="_blank" class="text-milasTextMuted hover:text-milasRed text-sm flex-shrink-0"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>` : ''}
-                                    </div>
-
-                                    <!-- Quick Metrics: 5 IG Actions -->
-                                    <div class="grid grid-cols-3 gap-1.5 bg-milasBg p-2 rounded-xl text-center border border-milasBorder text-xs">
-                                        <div>
-                                            <div class="text-[9px] text-milasTextMuted">Likes</div>
-                                            <div class="font-bold text-white">${post.likes || 0}</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] text-milasTextMuted">Com.</div>
-                                            <div class="font-bold text-white">${post.comments || 0}</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] text-milasTextMuted">Guard.</div>
-                                            <div class="font-bold text-white">${post.saves || 0}</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] text-milasTextMuted">Comp.</div>
-                                            <div class="font-bold text-white">${post.shares || 0}</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] text-amber-400 font-semibold">Reposts</div>
-                                            <div class="font-bold text-amber-400">${post.reposts || 0}</div>
-                                        </div>
-                                        <div>
-                                            <div class="text-[9px] text-milasTextMuted">Visitas</div>
-                                            <div class="font-bold text-white">${post.views || 0}</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-milasTextMuted">Engagement Rate: <strong class="text-emerald-400 font-bold">${rate}%</strong></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Footer Conversion Button -->
-                            <div class="p-4 pt-0">
-                                <div class="bg-milasRed/10 border border-milasRed/30 rounded-xl p-2.5 flex items-center justify-between">
-                                    <div>
-                                        <div class="text-[10px] uppercase font-bold text-milasRed">Clientes Ganados</div>
-                                        <div class="text-lg font-extrabold text-white font-heading">${post.conversions || 0}</div>
-                                    </div>
-                                    <button onclick="addConversion('${post.id}', event)" class="bg-milasRed hover:bg-milasRedHover text-white px-3 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1.5 shadow-md transition-all active:scale-95">
-                                        <i class="fa-solid fa-user-plus"></i>
-                                        <span>+1 Cliente</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            renderKPIs();
-            renderCharts();
-        }
-
-        // Calculate Overview KPIs
-        function renderKPIs() {
-            const totalPosts = posts.length;
-            const totalViews = posts.reduce((acc, p) => acc + (parseInt(p.views) || 0), 0);
-            const totalEngagement = posts.reduce((acc, p) => acc + (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0) + (parseInt(p.saves) || 0) + (parseInt(p.shares) || 0) + (parseInt(p.reposts) || 0), 0);
-            const totalConversions = posts.reduce((acc, p) => acc + (parseInt(p.conversions) || 0), 0);
-
-            const avgRate = totalViews > 0 ? ((totalEngagement / totalViews) * 100).toFixed(1) : '0.0';
-
-            // Top Funnel Objective
-            const objCounts = {};
-            posts.forEach(p => {
-                const conv = parseInt(p.conversions) || 0;
-                objCounts[p.objective] = (objCounts[p.objective] || 0) + conv;
-            });
-
-            let topObj = '-';
-            let maxConv = -1;
-            Object.keys(objCounts).forEach(obj => {
-                if (objCounts[obj] > maxConv) {
-                    maxConv = objCounts[obj];
-                    topObj = obj;
-                }
-            });
-
-            document.getElementById('kpi-total-posts').innerText = totalPosts;
-            document.getElementById('kpi-total-views').innerText = totalViews.toLocaleString();
-            document.getElementById('kpi-total-engagement').innerText = totalEngagement.toLocaleString();
-            document.getElementById('kpi-avg-rate').innerText = avgRate + '%';
-            document.getElementById('kpi-total-conversions').innerText = totalConversions;
-            document.getElementById('kpi-top-pillar').innerText = topObj;
-        }
-
-        // Render Chart.js Analytics
-        function renderCharts() {
-            // Chart 1: Conversions per Funnel Objective
-            const objLabels = ['Confianza', 'Diferenciación', 'Conversión', 'Logística'];
-            const objData = objLabels.map(label => {
-                return posts.filter(p => p.objective === label)
-                            .reduce((acc, p) => acc + (parseInt(p.conversions) || 0), 0);
-            });
-
-            const ctx1 = document.getElementById('chartConversions').getContext('2d');
-            if (chartConversionsInstance) chartConversionsInstance.destroy();
-
-            chartConversionsInstance = new Chart(ctx1, {
-                type: 'bar',
-                data: {
-                    labels: objLabels,
-                    datasets: [{
-                        label: 'Clientes Ganados',
-                        data: objData,
-                        backgroundColor: ['#3B82F6', '#10B981', '#EA2B2B', '#F59E0B'],
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: { ticks: { color: '#9CA3AF' }, grid: { display: false } },
-                        y: { ticks: { color: '#9CA3AF', precision: 0 }, grid: { color: '#262A36' } }
-                    }
-                }
-            });
-
-            // Chart 2: Performance by Content Pillar (Includes Reposts in total interactions)
-            const pillarLabels = ['Divertido', 'Educativo', 'Informativo'];
-            const pillarData = pillarLabels.map(label => {
-                return posts.filter(p => p.pillar === label)
-                            .reduce((acc, p) => acc + (parseInt(p.likes) || 0) + (parseInt(p.comments) || 0) + (parseInt(p.saves) || 0) + (parseInt(p.shares) || 0) + (parseInt(p.reposts) || 0), 0);
-            });
-
-            const ctx2 = document.getElementById('chartPillars').getContext('2d');
-            if (chartPillarsInstance) chartPillarsInstance.destroy();
-
-            chartPillarsInstance = new Chart(ctx2, {
-                type: 'doughnut',
-                data: {
-                    labels: pillarLabels,
-                    datasets: [{
-                        data: pillarData,
-                        backgroundColor: ['#EC4899', '#8B5CF6', '#EA2B2B'],
-                        borderWidth: 2,
-                        borderColor: '#161922'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#F3F4F6', font: { family: 'Inter' } }
-                        }
-                    }
-                }
-            });
-        }
-
-        // Toast Helper
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-};
+    </script>
 </body>
 </html>
