@@ -985,5 +985,14 @@
             }, 3000);
         }
     </script>
+    // Apertura de conexión nativa en JavaScript
+const request = indexedDB.open("MILAS_Dashboard_DB", 1);
+
+request.onupgradeneeded = function(e) {
+    const db = e.target.result;
+    if (!db.objectStoreNames.contains("posts")) {
+        db.createObjectStore("posts", { keyPath: "id" });
+    }
+};
 </body>
 </html>
